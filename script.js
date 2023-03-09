@@ -1,26 +1,23 @@
 function Gameboard () {
-  const column=3;
-  const rows=3;
+  const cells=9;
   const gameboard=[];
 
-  for (let i=0;i<rows;i++) {
-    gameboard[i]=[];
-    for (let j=0;j<column;j++) {
-      gameboard[i].push(cell());
-    }
+  for (let i=0;i<cells;i++) {
+    gameboard.push(cell());
+    
   }
 
   const getBoard=()=>gameboard;
 
-  const dropToken= (row,column,player)=> {
-    if (gameboard[row][column].getValue()!==0) {
+  const dropToken= (cell,player)=> {
+    if (gameboard[cell].getValue()!==0) {
       return ;
     }
-    gameboard[row][column].setValue(player);
+    gameboard[cell].setValue(player);
   }
 
   const printBoard =()=> {
-    const printWithValues=gameboard.map((row)=>row.map((cell)=>cell.getValue()));
+    const printWithValues=gameboard.map((cell)=>cell.getValue());
     console.log(printWithValues);
   }
 
@@ -58,9 +55,12 @@ function gameManager () {
     activePlayer=activePlayer===players[0]?players[1]:players[0];
   }
 
-  const playRound=(row,column)=>{
-    board.dropToken(row,column,activePlayer.token);
-    printNewRound();
+  
+
+  const playRound=(cell)=>{
+    board.dropToken(cell,activePlayer.token);
+    switchActivePlayer();
+    console.log(checkWin(board.getBoard(),'X'));
   }
 
   const printNewRound=()=>{
@@ -68,10 +68,41 @@ function gameManager () {
     console.log (`${getActivePlayer().name}`);
   };
 
-  playRound(0,0);
-  switchActivePlayer();
-  printNewRound();
-  playRound(0,0);
+
+  return {getActivePlayer,playRound,switchActivePlayer,getBoard:board.getBoard};
 }
 
-const game=gameManager();
+function screenManager () {
+  const game=gameManager();
+
+  const switchPlayerDiv=document.querySelector('.active-player');
+  const boardDiv=document.querySelector('.board');
+  const activePlayer=game.getActivePlayer();
+  
+  const updateGame=()=>{
+    boardDiv.textContent='';
+    switchPlayerDiv.textContent=`${activePlayer.name}'s turn.`;
+    const board=game.getBoard();
+    
+    board.forEach((cell,indexc) => {
+      const cellDiv=document.createElement('div');
+      cellDiv.dataset.cell=indexc;
+      cellDiv.classList.add('cell');
+      cellDiv.textContent=cell.getValue();
+      boardDiv.appendChild(cellDiv);
+    });
+  }
+
+  boardDiv.addEventListener('click',(e)=>{
+    const selectedCell=e.target.dataset.cell;
+
+    game.playRound(selectedCell);
+    console.log (selectedCell+" and thats it");
+
+    updateGame();
+  })
+
+  updateGame();
+}
+
+const game=screenManager();
