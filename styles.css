@@ -90,3 +90,33 @@ footer {
 .restart:hover {
     border-bottom: 6px solid #4ECCA3;
 }
+
+/* Winner overlay styles */
+.winner-overlay {
+    background-color: #232931;
+    padding: 27px;
+    width: 350px;
+    height: 160px;
+    text-align: center;
+    display: none;
+    flex-direction: column;
+}
+
+.winner-overlay>p {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #EEEEEE;
+    flex: 1;
+}
+
+.winner-btns {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.winner-btns>button {
+    background-color: #4ECCA3;
+    border:none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
