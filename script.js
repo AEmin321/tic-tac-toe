@@ -67,16 +67,13 @@ function gameManager () {
   const playRound=(cell)=>{
     board.dropToken(cell,activePlayer.token);
     switchActivePlayer();
-    if (isFull(board.getBoard())){
-      console.log (checkWin(board.getBoard(),activePlayer.token));
-    }
   }
 
   const printNewRound=()=>{
     board.printBoard();
     console.log (`${getActivePlayer().name}`);
   };
-  return {getActivePlayer,playRound,switchActivePlayer,getBoard:board.getBoard};
+  return {getActivePlayer,playRound,isFull,checkWin,getBoard:board.getBoard};
 }
 
 
@@ -84,7 +81,19 @@ function screenManager () {
   const game=gameManager();
   const switchPlayerDiv=document.querySelector('.active-player');
   const boardDiv=document.querySelector('.board');
-  
+  const winnerOverlay=document.querySelector('.winner-overlay');
+  const roundWinner=document.querySelector('.round-winner');
+
+  const handleWinner=()=>{
+    if (game.checkWin(game.getBoard())){
+      winnerOverlay.style.display='flex';
+      roundWinner.textContent=`${game.getActivePlayer().token==='X'?'O':'X'} won the round.`;
+    }
+    if (game.isFull(game.getBoard())){
+      winnerOverlay.style.display='flex';
+      roundWinner.textContent="It's a tie."
+    }
+  }
 
   const updateGame=()=>{
     const activePlayer=game.getActivePlayer();
@@ -108,7 +117,8 @@ function screenManager () {
   boardDiv.addEventListener('click',(e)=>{
     const selectedCell=e.target.dataset.cell;
     game.playRound(selectedCell);
-    console.log (selectedCell+" and thats it");
+
+    handleWinner();
     updateGame();
   })
   updateGame();

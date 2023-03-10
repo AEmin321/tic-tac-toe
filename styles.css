@@ -19,6 +19,7 @@ footer {
 }
 
 .container {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -93,6 +94,8 @@ footer {
 
 /* Winner overlay styles */
 .winner-overlay {
+    position: absolute;
+    top: 30%;
     background-color: #232931;
     padding: 27px;
     width: 350px;
@@ -103,7 +106,7 @@ footer {
 }
 
 .winner-overlay>p {
-    font-size: 2rem;
+    font-size: 1.7rem;
     font-weight: 700;
     color: #EEEEEE;
     flex: 1;
