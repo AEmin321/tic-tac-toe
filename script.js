@@ -1,14 +1,15 @@
 function Gameboard () {
   const cells=9;
-  const gameboard=[];
+  let gameboard=['','','','','','','','',''];
 
-  for (let i=0;i<cells;i++) {
-    gameboard.push(0);
+  const resetBoard=()=>{
+    gameboard=['','','','','','','','',''];
   }
 
   const getBoard=()=>gameboard;
+
   const dropToken= (cell,player)=> {
-    if (gameboard[cell]!==0) {
+    if (gameboard[cell]!=='') {
       return ;
     }
     gameboard[cell]=player;
@@ -18,7 +19,7 @@ function Gameboard () {
     const printWithValues=gameboard.map((cell)=>cell);
     console.log(printWithValues);
   }
-  return {dropToken,printBoard,getBoard};
+  return {resetBoard,dropToken,printBoard,getBoard};
 }
 
 
@@ -26,13 +27,16 @@ function gameManager () {
   const players=[
     {
       name:'Player1',
-      token:'X'
+      token:'X',
+      score:0
     },
     {
       name:'Player2',
-      token:'O'
+      token:'O',
+      score:0
     }
   ];
+  const getPlayers=()=>players;
   const board=Gameboard();
   let activePlayer=players[0];
 
@@ -40,6 +44,7 @@ function gameManager () {
     activePlayer=activePlayer===players[0] ? players[1] : players[0];
   }
   const getActivePlayer=()=>activePlayer;
+
   const checkWin=(board,player)=>{
     const winningCombos = [
       [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
@@ -58,7 +63,7 @@ function gameManager () {
   }
 
   const isFull=(board)=>{
-    if (board.includes(0)){
+    if (board.includes('')){
       return false;
     }
     return true;
@@ -73,7 +78,7 @@ function gameManager () {
     board.printBoard();
     console.log (`${getActivePlayer().name}`);
   };
-  return {getActivePlayer,playRound,isFull,checkWin,getBoard:board.getBoard};
+  return {getPlayers,getActivePlayer,playRound,isFull,checkWin,getBoard:board.getBoard,reset:board.resetBoard};
 }
 
 
@@ -83,6 +88,10 @@ function screenManager () {
   const boardDiv=document.querySelector('.board');
   const winnerOverlay=document.querySelector('.winner-overlay');
   const roundWinner=document.querySelector('.round-winner');
+  const newGameBtn=document.querySelector('.new-game');
+  const newRoundBtn=document.querySelector('.new-round');
+  const player1Score=document.querySelector('.player1-score');
+  const player2Score=document.querySelector('.player2-score');
 
   const handleWinner=()=>{
     if (game.checkWin(game.getBoard())){
@@ -93,6 +102,23 @@ function screenManager () {
       winnerOverlay.style.display='flex';
       roundWinner.textContent="It's a tie."
     }
+  }
+
+  newGameBtn.addEventListener('click',()=>{
+    winnerOverlay.style.display='none';
+    reset();
+    updateGame();
+  });
+
+  const reset=()=>{
+    let players=game.getPlayers();
+    game.reset();
+    // boardDiv.innerHTML='';
+    console.log (game.getBoard());
+    players[0].score=0;
+    players[1].score=0;
+    player1Score.textContent='0';
+    player2Score.textContent='0';
   }
 
   const updateGame=()=>{
@@ -107,9 +133,6 @@ function screenManager () {
       cellDiv.dataset.cell=indexc;
       cellDiv.classList.add('cell');
       cellDiv.textContent=cell;
-      if (cell===0){
-        cellDiv.textContent='';
-      }
       boardDiv.appendChild(cellDiv);
     });
   }
