@@ -93,36 +93,57 @@ function screenManager () {
   const player1Score=document.querySelector('.player1-score');
   const player2Score=document.querySelector('.player2-score');
 
+  const handleScore=()=>{
+    let players=game.getPlayers();
+    if (game.getActivePlayer()===players[0]) {
+      players[1].score++;
+    }
+    else {
+      players[0].score++;
+    }
+  }
+
   const handleWinner=()=>{
     if (game.checkWin(game.getBoard())){
       winnerOverlay.style.display='flex';
       roundWinner.textContent=`${game.getActivePlayer().token==='X'?'O':'X'} won the round.`;
+      handleScore();
     }
     if (game.isFull(game.getBoard())){
       winnerOverlay.style.display='flex';
-      roundWinner.textContent="It's a tie."
+      roundWinner.textContent="It's a tie.";
     }
   }
 
+  newRoundBtn.addEventListener('click',()=>{
+    winnerOverlay.style.display='none';
+    reset();
+    updateGame();
+  })
+
   newGameBtn.addEventListener('click',()=>{
     winnerOverlay.style.display='none';
+    let players=game.getPlayers();
+    players[0].score=0;
+    players[1].score=0;
     reset();
     updateGame();
   });
 
   const reset=()=>{
-    let players=game.getPlayers();
     game.reset();
-    // boardDiv.innerHTML='';
+    
     console.log (game.getBoard());
-    players[0].score=0;
-    players[1].score=0;
     player1Score.textContent='0';
     player2Score.textContent='0';
   }
 
   const updateGame=()=>{
+    let players=game.getPlayers();
     const activePlayer=game.getActivePlayer();
+    player1Score.textContent=players[0].score;
+    player2Score.textContent=players[1].score;
+
     boardDiv.textContent='';
     console.log (activePlayer);
     switchPlayerDiv.textContent=`${activePlayer.token}'s turn.`;
