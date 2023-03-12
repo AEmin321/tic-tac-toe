@@ -74,10 +74,6 @@ function gameManager () {
     switchActivePlayer();
   }
 
-  const printNewRound=()=>{
-    board.printBoard();
-    console.log (`${getActivePlayer().name}`);
-  };
   return {getPlayers,getActivePlayer,playRound,isFull,checkWin,getBoard:board.getBoard,reset:board.resetBoard};
 }
 
@@ -85,13 +81,14 @@ function gameManager () {
 function screenManager () {
   const game=gameManager();
   const switchPlayerDiv=document.querySelector('.active-player');
-  const boardDiv=document.querySelector('.board');
   const winnerOverlay=document.querySelector('.winner-overlay');
   const roundWinner=document.querySelector('.round-winner');
   const newGameBtn=document.querySelector('.new-game');
   const newRoundBtn=document.querySelector('.new-round');
   const player1Score=document.querySelector('.player1-score');
   const player2Score=document.querySelector('.player2-score');
+  const cellsDiv=document.querySelectorAll('.cell');
+  const restartBtn=document.querySelector('.restart');
 
   const handleScore=()=>{
     let players=game.getPlayers();
@@ -130,8 +127,16 @@ function screenManager () {
     updateGame();
   });
 
+  restartBtn.addEventListener('click',()=>{
+    reset();
+    updateGame();
+  })
+
   const reset=()=>{
     game.reset();
+    cellsDiv.forEach(cell=>{
+      cell.disabled=false;
+    })
     
     console.log (game.getBoard());
     player1Score.textContent='0';
@@ -144,26 +149,25 @@ function screenManager () {
     player1Score.textContent=players[0].score;
     player2Score.textContent=players[1].score;
 
-    boardDiv.textContent='';
     console.log (activePlayer);
     switchPlayerDiv.textContent=`${activePlayer.token}'s turn.`;
     const board=game.getBoard();
 
-    board.forEach((cell,indexc) => {
-      const cellDiv=document.createElement('div');
-      cellDiv.dataset.cell=indexc;
-      cellDiv.classList.add('cell');
-      cellDiv.textContent=cell;
-      boardDiv.appendChild(cellDiv);
-    });
+    board.forEach((item,index)=>{
+      cellsDiv[index].textContent=item;
+      cellsDiv[index].dataset.cell=index;
+    })
   }
+  
+  cellsDiv.forEach((cell)=>{
+    cell.addEventListener('click',(e)=>{
+      const selectedCell=e.target.dataset.cell;
+      game.playRound(selectedCell);
+      cell.disabled=true;
 
-  boardDiv.addEventListener('click',(e)=>{
-    const selectedCell=e.target.dataset.cell;
-    game.playRound(selectedCell);
-
-    handleWinner();
-    updateGame();
+      handleWinner();
+      updateGame();
+    })
   })
   updateGame();
 }

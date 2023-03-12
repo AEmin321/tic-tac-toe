@@ -39,6 +39,7 @@ footer {
     font-family: 'Fredoka One', cursive;
     background-color: #EEEEEE;
     display: flex;
+    border: none;
     align-items: center;
     justify-content: center;
     color: #232931;
