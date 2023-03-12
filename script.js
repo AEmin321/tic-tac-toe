@@ -127,8 +127,8 @@ function screenManager () {
     players[0].name=`${player1Input.value===''?'player1':player1Input.value}`;
     players[1].name=`${player2Input.value===''?'player2':player2Input.value}`;
 
-    player1Name.textContent=players[0].name;
-    player2Name.textContent=players[1].name;
+    player1Name.textContent=`X ${players[0].name}`;
+    player2Name.textContent=`O ${players[1].name}`;
   })
 
   newRoundBtn.addEventListener('click',()=>{
@@ -147,8 +147,10 @@ function screenManager () {
   });
 
   restartBtn.addEventListener('click',()=>{
-    reset();
-    updateGame();
+    introPage.style.display='flex';
+    footer.style.display='none';
+    player1Input.value='';
+    player2Input.value='';
   })
 
   const reset=()=>{
@@ -167,8 +169,8 @@ function screenManager () {
     const activePlayer=game.getActivePlayer();
     player1Score.textContent=players[0].score;
     player2Score.textContent=players[1].score;
-    player1Name.textContent=players[0].name;
-    player2Name.textContent=players[1].name;
+    player1Name.textContent=`X ${players[0].name}`;
+    player2Name.textContent=`O ${players[1].name}`;
 
     console.log (activePlayer);
     switchPlayerDiv.textContent=`${activePlayer.token}'s turn.`;
