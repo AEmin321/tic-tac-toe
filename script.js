@@ -87,8 +87,15 @@ function screenManager () {
   const newRoundBtn=document.querySelector('.new-round');
   const player1Score=document.querySelector('.player1-score');
   const player2Score=document.querySelector('.player2-score');
+  const player1Name=document.querySelector('.player1-name');
+  const player2Name=document.querySelector('.player2-name');
   const cellsDiv=document.querySelectorAll('.cell');
   const restartBtn=document.querySelector('.restart');
+  const playBtn=document.querySelector('.play-btn');
+  const introPage=document.querySelector('.intro-page');
+  const footer=document.querySelector('footer');
+  const player1Input=document.querySelector('.player1-input');
+  const player2Input=document.querySelector('.player2-input');
 
   const handleScore=()=>{
     let players=game.getPlayers();
@@ -111,6 +118,18 @@ function screenManager () {
       roundWinner.textContent="It's a tie.";
     }
   }
+
+  playBtn.addEventListener('click',()=>{
+    let players=game.getPlayers();
+    introPage.style.display='none';
+    footer.style.display='block';
+
+    players[0].name=`${player1Input.value===''?'player1':player1Input.value}`;
+    players[1].name=`${player2Input.value===''?'player2':player2Input.value}`;
+
+    player1Name.textContent=players[0].name;
+    player2Name.textContent=players[1].name;
+  })
 
   newRoundBtn.addEventListener('click',()=>{
     winnerOverlay.style.display='none';
@@ -148,6 +167,8 @@ function screenManager () {
     const activePlayer=game.getActivePlayer();
     player1Score.textContent=players[0].score;
     player2Score.textContent=players[1].score;
+    player1Name.textContent=players[0].name;
+    player2Name.textContent=players[1].name;
 
     console.log (activePlayer);
     switchPlayerDiv.textContent=`${activePlayer.token}'s turn.`;
