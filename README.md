@@ -4,7 +4,7 @@
 
 ## Live Preview
 
-- //
+- https://aemin321.github.io/tic-tac-toe/
 
 ## Screenshots
 
